@@ -1,0 +1,75 @@
+\chapter{MESA}
+\label{chap:mesa_method}
+
+この章では、MESA\cite{mesa}を使う時の手順と実際に計算した手法について書く．後輩の役立つように経験メモのようになる．
+
+\section{鈴木研のPC環境}
+
+MESAを使う時，自分の持っているPC内にインストール使ってもいいが，鈴木研のPCで回した方が効率的である．鈴木研のPC(asphrx7,8)では動かせるCPU(論理プロフェッサー)の数が44あるので，簡単言えば44個の計算を同時に回すことができるようになる．また，バックグランドで回すことができるので自分のPCでは別の作業をしていても計算は別で行ってくれる． \\ \\
+論理プロフェッサーの数を調べる
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, frame=single]
+grep processor /proc/cpuinfo | wc -l
+\end{lstlisting}
+
+私の環境はMac->TUSネットワーク->鈴木研サーバーでアクセスしていた．Mac->TUSネットワークでは「Cisco」を，TUSネットワーク->鈴木研サーバーではsshログインを行っていた．\\ \\
+$\sim$/.ssh/configの中に以下のように記入しとく．するとssh szkで簡単にsshログインできる
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, frame=single]
+Host szk
+  HostName 10.66.24.67
+  User j6216084
+\end{lstlisting}
+
+asphrx3~8まであるが，最初にsshログインするところはasphrx5である．さらにホームディレクトリにいるだろう．性能がいいのはasphrx7,8なので操作に慣れてきて計算量が多くなったらasphrx7や8を使用すると良い(ssh asphrx7等で移動できる)．この時に注意としては，asphrx7,8からホームディレクトリにアクセスするのは(ネットワーク経由なので)時間がかかる．そこで，asphrx7,8を使うときは/asph/rx7/以下に自分のフォルダを作って作業した方が良い．そこのフォルダには先輩方のフォルダもあるので実行はできないが先輩方のコードやフォルダ構成を見ることもできるので勉強になると思う．\\ \\
+$\sim$/.bashrcによく使うディレクトリに移動するように設定しとくことで作業が楽になる．
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, frame=single]
+cd /asph/rx7/j6216084/mesa/mesa-r11701/star
+\end{lstlisting}
+
+コマンド上で操作するので，色々と便利なことは実践した方がいい．$\sim$.vimrcや$\sim$.bashrcをいじると良い．ローカルPCと鈴木研PCとのデータのやり取りは「Filezila」というFTPがオススメ．
+
+\section{MESAのインストール}
+
+今回使用したバージョンはmesa-r11701である．出来るだけ最新版を使えるようにすると良い．ホームディレクトリにインストールすると権限の問題で少し大変なので，上に述べた/asph/rx7/以下等に自分のディレクトリを作ってやるのが良い．ホームディレクトリにインストールする場合，もし詰まったときは権限の問題の可能性が高いのでchmodコマンドで対応すると良い(この問題でインストールのコードを読んでみるのもいい経験になると思う)．
+インストールの仕方はhttp://mesa.sourceforge.net/\cite{mesa}にあるのでここでは割愛する．
+
+\section{テストケース}
+
+上記サイト\cite{mesa}にあるMESAのチュートリアルを一通りやると動かし方がわかるようになるだろう．その後にするといいことは/star/test\_suite/以下にあるテストケースを試してみるということだ．色んなケースがあるので自分に必要なケースのサンプルがあるだろう．私は重力崩壊直前の親星のデータが得たかったので，「example\_make\_pre\_ccsn」を参考に計算を行った．
+
+\section{ソースコード}
+
+実際に使ったソースコードはhttps://github.com/tacohachii/make\_pre\_ccsnに載っているので参考にして欲しい．また，同時に複数のプログラムを動かすコードとか，途中の結果を出力するコード等は，/asph/rx7/j621608/以下にあるコードを参考にして欲しい．
+
+\section{結果}
+
+重力崩壊前の星の構造を求めるため，MESAで10.0M~25.9Mまでの160個の親星について計算を行った．その時の設定は，図\ref{fig:mesa_setting}のようになる．
+
+\begin{figure}[htbp]
+  \begin{center}
+    \fbox{\includegraphics[width=111mm]{./img/mesa_setting.eps}}
+  \end{center}
+  \caption{MESAの進化判定条件}
+  \label{fig:mesa_setting}
+\end{figure}
+
+結果として，107個のものしか上手く計算できなかった．その時の分布は次の図\ref{fig:mesa_calc}ようである．
+
+\begin{figure}[htbp]
+  \begin{center}
+    \fbox{\includegraphics[width=130mm]{./img/mesa_calc.eps}}
+  \end{center}
+  \caption{MESAの計算成功数}
+  \label{fig:mesa_calc}
+\end{figure}
+
+10M付近の比較的質量の小さい領域と25M付近の領域では爆発するかどうかが不安定な領域で少しの計算誤差で結果が左右されてしまうところなので，その結果が現れていると分かる．
+
+計算できたものに関しては，中心から表面に向かうまでの元素の質量分立(図\ref{fig:mesa_frac})が分かったり，質量分布が分かったりした．
+
+\begin{figure}[htbp]
+  \begin{center}
+    \fbox{\includegraphics[width=90mm]{./img/mesa_frac.eps}}
+  \end{center}
+  \caption{$15M\sun$における質量分立}
+  \label{fig:mesa_frac}
+\end{figure}

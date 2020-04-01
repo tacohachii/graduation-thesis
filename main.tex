@@ -1,0 +1,52 @@
+\newif\ifjapanese
+
+\japanesetrue
+
+\documentclass[11pt]{jreport}
+\renewcommand{\bibname}{参考文献}
+\newcommand{\acknowledgmentname}{謝辞}
+
+\usepackage{ascmac}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{ylab_thesis}
+\usepackage{listings}
+
+% 自作
+\newcommand{\sun}[0]{_{\odot}}
+
+
+\bindermode
+
+\jclass{卒業論文}
+\jtitle{恒星の進化と爆発過程の\\数値シュミレーション}
+\juniv{東京理科大学}
+\jfaculty{理工学部物理学科}
+\jauthor{高橋 倖平}
+\jadvisor{鈴木 英之}{教授}
+\jhyear{31}
+\jsyear{2019}
+\jkeyword	{MESA，重力崩壊型超新星爆発，ニュートリノ加熱}
+
+\begin{document}
+
+\jmaketitle
+
+\include{00_abstract}
+
+\tableofcontents
+\listoffigures
+
+\pagenumbering{arabic}
+
+\include{01_intro}
+\include{02_supernova}
+\include{03_mesa}
+\include{04_calc}
+\include{05_conclusion}
+
+\include{90_acknowledgment}
+\include{91_bibliography}
+\appendix
+
+\end{document}
